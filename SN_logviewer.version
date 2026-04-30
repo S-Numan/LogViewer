@@ -1,0 +1,17 @@
+{
+  "masterVersionFile": "https://raw.githubusercontent.com/S-Numan/LogViewer/master/logviewer.version",
+
+  "modName": "LogViewer",
+  "modVersion":
+    {
+      "major": 1,
+      "minor": 0,
+      "patch": "0" # Can be a number, character or string (1, 2, a, b, "-RC2", etc)
+    },
+
+  "modThreadId": 33414,
+
+  "directDownloadURL": "https://github.com/S-Numan/LogViewer/releases/latest/download/LogViewer.zip",
+
+  "changelogURL": "https://raw.githubusercontent.com/S-Numan/LogViewer/master/CHANGELOGS.md",
+}

@@ -1,0 +1,5 @@
+{
+  "plugins": {
+    "DrawMessageScrollerTopLeft": "logViewer.DrawMessageScrollerTopLeft",
+  },
+}
