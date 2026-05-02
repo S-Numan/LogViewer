@@ -18,6 +18,11 @@ internal class LogMessageAppender : AppenderSkeleton() {
 
         val level = event.getLevel()
         if (level.isGreaterOrEqual(LVSettings.addLogsToConsoleModConsoleLevel)) {
+
+            // TODO, remove this next GraphicsLib update
+            if(event.renderedMessage.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.
+                return
+
             if (LVSettings.isConsoleModEnabled && LVSettings.addLogsToConsoleModConsoleLevel != Level.OFF) {
                 val msg = buildString {
                     append("[${level}] ")

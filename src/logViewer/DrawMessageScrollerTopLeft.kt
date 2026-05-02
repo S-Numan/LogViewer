@@ -27,9 +27,6 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
         private const val MESSAGE_LIFETIME = 5f
         private const val FADE_START = 4.0f
 
-
-        private val messageQueue = ArrayDeque<Pair<String, Color>>()
-
         private data class FeedMessage(
             val text: String,
             val color: Color,
@@ -41,10 +38,10 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
         private val activeMessages = mutableListOf<FeedMessage>()
 
         private var font: LazyFont? = null
-        private var toDraw: LazyFont.DrawableString? = null
+        private val overflowMessages = mutableListOf<FeedMessage>()
+        private var overflowDrawable: LazyFont.DrawableString? = null
 
         private var init = false
-        private var fadingOut = false
         private var curState = GameState.TITLE
         private var justLoadedGame = 0
 
@@ -63,17 +60,6 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
 
         fun onGameLoad() {
             justLoadedGame = 2 // Delay a tick for the screen panel+
-           //clearCurrent()
-        }
-
-        private fun clearCurrent() {
-            if (toDraw != null) {
-
-                toDraw = null
-                messageQueue.clear()
-
-                fadingOut = false
-            }
         }
 
         fun renderStatic() {
@@ -84,11 +70,15 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
             val baseX = LEFT_BUFFER
             val baseY = (screenHeight - TOP_BUFFER) - if(isCampaign) CAMPAIGN_TOP_BUFFER else 0f
 
+            var lastYOffset = 0f
+
             for (msg in activeMessages) {
                 val drawable = msg.drawable ?: continue
 
-                val x = baseX//(screenWidth - drawable.width) / 2f
+                val x = baseX
                 val y = baseY - msg.yOffset
+
+                lastYOffset = msg.yOffset
 
                 val alpha = when {
                     msg.age > FADE_START -> {
@@ -101,6 +91,30 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
                 drawable.baseColor = Color(msg.color.red, msg.color.green, msg.color.blue, alpha)
                 drawable.draw(x, y)
             }
+
+            val overflowCount = overflowMessages.size
+            if (overflowCount > 0 && font != null) {
+                val text = "+$overflowCount more"
+
+                if (overflowDrawable == null) {
+                    overflowDrawable = font!!.createText(text, Color(180, 180, 180), 20f)
+                }
+                if(overflowDrawable?.text != text) {
+                    overflowDrawable?.text = text
+                }
+
+                val lineHeight = 26f
+                val y = baseY - lastYOffset - lineHeight
+
+                /*val oldest = overflowMessages.lastOrNull()?.age ?: 0f
+                val alpha = if (oldest > FADE_START) {
+                    val fadeProgress = (oldest - FADE_START) / (MESSAGE_LIFETIME - FADE_START)
+                    (255 * (1f - fadeProgress.coerceIn(0f, 1f))).toInt()
+                } else 255
+
+                overflowDrawable?.baseColor = Color(180, 180, 180, alpha)*/
+                overflowDrawable?.draw(baseX, y)
+            }
         }
 
         val cachedMessages = mutableListOf<Pair<String, Color>>()
@@ -110,7 +124,8 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
             val text = if (text.length > 300) text.substring(0, 300) else text
 
             // No duplicates
-            if (excludeExistingMessages && activeMessages.find { it.text == text } != null) {
+            if (excludeExistingMessages
+                && (activeMessages.any { it.text == text }) || cachedMessages.any { it.first == text } || overflowMessages.any { it.text == text }) {
                 return
             }
 
@@ -203,9 +218,20 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
             }
         }
 
+        val overflowIterator = overflowMessages.iterator()
+        while (overflowIterator.hasNext()) {
+            val msg = overflowIterator.next()
+            msg.age += amount
+
+            if (msg.age > MESSAGE_LIFETIME) {
+                overflowIterator.remove()
+            }
+        }
+
         // Clamp list size
         while (activeMessages.size > MAX_MESSAGES) {
-            activeMessages.removeLast()
+            val removed = activeMessages.removeLast()
+            overflowMessages.add(removed)
         }
     }
 
