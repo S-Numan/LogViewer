@@ -46,5 +46,5 @@ object LVSettings {
     var isConsoleModEnabled = false
 
     var addLogsToConsoleModConsoleLevel = Level.WARN
-    var addLogsToDisplayMessageLevel = Level.WARN
+    var addLogsToDisplayMessageLevel = Level.ERROR
 }
