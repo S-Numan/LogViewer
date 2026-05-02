@@ -21,12 +21,12 @@ class LogViewerPlugin : BaseModPlugin() {
 
     companion object {
         var applicationLoaded = false
-        val cachedEvents = mutableListOf<LoggingEvent>()
+        var reachedMaxCache = false
+        const val MAX_CACHE_SIZE = 2000
+        val cachedEvents = ArrayDeque<LoggingEvent>()
     }
 
     override fun onApplicationLoad() {
-        applicationLoaded = true
-
         DrawMessageScrollerTopLeft.doInit()
 
         LVSettings.onApplicationLoad()
@@ -42,8 +42,20 @@ class LogViewerPlugin : BaseModPlugin() {
             throw RuntimeException(e)
         }
 
-        cachedEvents.forEach { LogMessageAppender.displayLoggedMessage(it) }
-        cachedEvents.clear()
+        val eventsToReplay: List<LoggingEvent>
+
+        synchronized(cachedEvents) {
+            applicationLoaded = true
+            eventsToReplay = cachedEvents.toList()
+            cachedEvents.clear()
+        }
+
+        eventsToReplay.forEach {
+            LogMessageAppender.displayLoggedMessage(it)
+        }
+        if(reachedMaxCache) {
+            Global.getLogger(this.javaClass).warn("LogViewer: Reached max cache size of $MAX_CACHE_SIZE events. Some logs have been dropped.")
+        }
     }
 
 
