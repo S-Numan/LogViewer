@@ -15,7 +15,7 @@ internal class LogMessageAppender : AppenderSkeleton() {
 
         fun displayLoggedMessage(event: LoggingEvent) {
             // Ignore logs from Console class to prevent infinite loops
-            if (event.loggerName == Console::class.java.name) return
+            if (LVSettings.isConsoleModEnabled && event.loggerName == Console::class.java.name) return
 
             // TODO, remove this next GraphicsLib update
             if (event.renderedMessage.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.

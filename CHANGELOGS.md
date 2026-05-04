@@ -1,3 +1,6 @@
+## 1.2.1
+- Fix mod to work without the Console Commands mod.
+
 ## 1.2.0
 - Reduced amount of logs cached before onApplicationLoad to prevent using too much memory.
 
