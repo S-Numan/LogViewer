@@ -28,14 +28,11 @@ internal class LogMessageAppender : AppenderSkeleton() {
                     val msg = buildString {
                         append("[${level}] ")
                         append("${event.loggerName} - ")
-                        append(event.renderedMessage)
 
-                        if (event.throwableInformation?.throwable.toString().isEmpty())
-                            return@buildString
-
-                        event.throwableStrRep?.let {
-                            append("\n")
-                            append(it.joinToString("\n"))
+                        if (event.throwableInformation?.throwable.toString().isNotEmpty() && event.throwableStrRep != null) {
+                            append(event.throwableStrRep.joinToString("\n"))
+                        } else {
+                            append(event.renderedMessage)
                         }
 
                     }
