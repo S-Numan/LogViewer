@@ -11,7 +11,6 @@ import com.fs.starfarer.api.input.InputEventAPI
 import com.fs.starfarer.api.ui.CustomPanelAPI
 import com.fs.starfarer.api.ui.UIComponentAPI
 import logViewer.core.LVMisc.getScreenPanel
-import logViewer.core.ReflectionUtils.getFieldsMatching
 import logViewer.core.ReflectionUtils.invoke
 import logViewer.core.TimeKeeper
 import org.lazywizard.lazylib.ui.FontException

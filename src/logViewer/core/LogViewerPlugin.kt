@@ -3,11 +3,13 @@ package logViewer.core
 import com.fs.starfarer.api.BaseModPlugin
 import com.fs.starfarer.api.Global
 import logViewer.DrawMessageScrollerTopLeft
+import logViewer.ErrToLog4jStream
 import logViewer.LogMessageAppender
-import org.apache.log4j.Level
+import logViewer.core.LVSettings.addSTDERRToLogs
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console
+import java.io.PrintStream
 
 class LogViewerPlugin : BaseModPlugin() {
     init {
@@ -30,6 +32,12 @@ class LogViewerPlugin : BaseModPlugin() {
         DrawMessageScrollerTopLeft.doInit()
 
         LVSettings.onApplicationLoad()
+
+        if(addSTDERRToLogs) {
+            if (System.err !is PrintStream || System.err.toString().contains("ErrToLog4j").not()) {
+                System.setErr(PrintStream(ErrToLog4jStream(), true))
+            }
+        }
 
         // Cause the lazy class loader to load these classes preemptively to prevent issues.
         try {

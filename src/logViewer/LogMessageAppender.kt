@@ -17,11 +17,10 @@ internal class LogMessageAppender : AppenderSkeleton() {
             // Ignore logs from Console class to prevent infinite loops
             if (LVSettings.isConsoleModEnabled && event.loggerName == Console::class.java.name) return
 
-            // TODO, remove this next GraphicsLib update
-            if (event.renderedMessage.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.
-                return
-
             val level = event.getLevel()
+
+            if (event.throwableInformation?.throwable is NoDisplayThrowable)
+                return
 
             if (LVSettings.addLogsToConsoleModConsoleLevel != Level.OFF && level.isGreaterOrEqual(LVSettings.addLogsToConsoleModConsoleLevel)) {
                 if (LVSettings.isConsoleModEnabled) {
@@ -42,8 +41,10 @@ internal class LogMessageAppender : AppenderSkeleton() {
             }
 
             if (LVSettings.addLogsToDisplayMessageLevel != Level.OFF && level.isGreaterOrEqual(LVSettings.addLogsToDisplayMessageLevel)) {
-                if (event.throwableInformation?.throwable is NoDisplayThrowable)
+                // TODO, remove this next GraphicsLib update
+                if (event.renderedMessage.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.
                     return
+
                 when (level) {
                     Level.WARN -> DisplayMessage.showMessageCustom(event.renderedMessage, Color.yellow)
                     Level.ERROR, Level.FATAL -> DisplayMessage.showMessageCustom(event.renderedMessage, Color.red)
