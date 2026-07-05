@@ -1,3 +1,7 @@
+## 1.3.0
+- Add functionality to send STDERR to logs as well.
+- Minor bug fixes
+
 ## 1.2.1
 - Fix mod to work without the Console Commands mod.
 

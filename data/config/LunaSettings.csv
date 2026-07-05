@@ -5,3 +5,7 @@ disable,Disable Mod,Boolean,false,,"Set this to true to disable this mod, preven
 textField,Text Field,Text,Logs below level WARN are not read before onApplicationLoad to lower memory usage.,,,,,
 addLogsToConsoleModConsoleLevel,Add logs to Console,Radio,WARN,"OFF, ALL, DEBUG, INFO, WARN, ERROR, FATAL",Add logs in ./starsector.log of input level and above to the console from Console Commands. Assuming that mod is enabled.,,,
 addLogsToDisplayMessageLevel,Add logs to Display Message,Radio,ERROR,"OFF, ALL, DEBUG, INFO, WARN, ERROR, FATAL",Show logs in ./starsector.log of input level and above as a message on the top left of the screen.,,,
+headerID,HeaderID,Header,Developer,,,,,
+addSTDERRToLogs,Add STDERR to logs,Boolean,false,,"Set this to true to always log output from STDERR
+Only works after onApplicationLoad.
+Requires game restart for change to take effect.",,,
