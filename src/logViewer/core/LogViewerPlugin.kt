@@ -5,7 +5,7 @@ import com.fs.starfarer.api.Global
 import logViewer.DrawMessageScrollerTopLeft
 import logViewer.ErrToLog4jStream
 import logViewer.LogMessageAppender
-import logViewer.core.LVSettings.addSTDERRToLogs
+import logViewer.core.LVSettings.redirectSTDERRToLogs
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console
@@ -33,7 +33,7 @@ class LogViewerPlugin : BaseModPlugin() {
 
         LVSettings.onApplicationLoad()
 
-        if(addSTDERRToLogs) {
+        if(redirectSTDERRToLogs) {
             if (System.err !is PrintStream || System.err.toString().contains("ErrToLog4j").not()) {
                 System.setErr(PrintStream(ErrToLog4jStream(), true))
             }

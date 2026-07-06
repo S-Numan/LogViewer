@@ -3,6 +3,6 @@
     "addLogsToConsoleModConsoleLevel":"WARN",
     "addLogsToDisplayMessageLevel":"ERROR",
 
-    "addSTDERRToLogs":false
+    "redirectSTDERRToLogs":false
 
 }

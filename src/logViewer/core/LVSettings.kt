@@ -2,14 +2,12 @@ package logViewer.core
 
 import com.fs.starfarer.api.Global
 import com.fs.starfarer.api.ModSpecAPI
-import logViewer.ErrToLog4jStream
 import lunalib.lunaSettings.LunaSettings
 import org.apache.log4j.Level
 import java.io.IOException
-import java.io.PrintStream
 
 object LVSettings {
-    fun getLevel(level: String): Level? = when (level) {
+    fun getLevel(level: String): Level = when (level) {
         "FATAL" -> Level.FATAL
         "ERROR" -> Level.ERROR
         "WARN" -> Level.WARN
@@ -32,7 +30,7 @@ object LVSettings {
 
                 addLogsToDisplayMessageLevel = getLevel(displayLevel)
                 addLogsToConsoleModConsoleLevel = getLevel(consoleLevel)
-                addSTDERRToLogs = modSettings.getBoolean("addSTDERRToLogs")
+                redirectSTDERRToLogs = modSettings.getBoolean("redirectSTDERRToLogs")
             } catch (ex: IOException) {
                 Global.getLogger(this.javaClass).fatal("unable to read modSettings.json", ex)
             }
@@ -48,7 +46,7 @@ object LVSettings {
 
     var isConsoleModEnabled = false
 
-    var addLogsToConsoleModConsoleLevel = Level.WARN
-    var addLogsToDisplayMessageLevel = Level.ERROR
-    var addSTDERRToLogs = false
+    var addLogsToConsoleModConsoleLevel: Level = Level.WARN
+    var addLogsToDisplayMessageLevel: Level = Level.ERROR
+    var redirectSTDERRToLogs = false
 }

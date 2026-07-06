@@ -23,11 +23,11 @@ internal class LunaSettingsListener : LunaSettingsListener {
 
             LVSettings.addLogsToDisplayMessageLevel = getLevel(displayLevel)
             LVSettings.addLogsToConsoleModConsoleLevel = getLevel(consoleLevel)
-            LVSettings.addSTDERRToLogs = LunaSettings.getBoolean(modID, "addSTDERRToLogs")!!
+            LVSettings.redirectSTDERRToLogs = LunaSettings.getBoolean(modID, "redirectSTDERRToLogs")!!
         } else {
             LVSettings.addLogsToConsoleModConsoleLevel = Level.OFF
             LVSettings.addLogsToDisplayMessageLevel = Level.OFF
-            LVSettings.addSTDERRToLogs = false
+            LVSettings.redirectSTDERRToLogs = false
         }
     }
 }
