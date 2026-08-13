@@ -124,14 +124,15 @@ object DisplayMessage {
     @JvmStatic
     @JvmOverloads
     fun showMessageCustom(message: String, color: Color = Misc.getTextColor()) {
+        /*
         val state = Global.getCurrentState()
         if(state == GameState.COMBAT) {
             val engine = Global.getCombatEngine()
             val ui = engine?.combatUI
             ui?.addMessage(1, color, message)
-        } else {
+        } else {*/
             DrawMessageScrollerTopLeft.addMessage(message, color)
-        }
+        //}
     }
 
 
