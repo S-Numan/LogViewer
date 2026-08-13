@@ -8,14 +8,18 @@ import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.Level
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console
+import org.lazywizard.lazylib.ui.LazyFont
 import java.awt.Color
 
 internal class LogMessageAppender : AppenderSkeleton() {
     companion object {
 
         fun displayLoggedMessage(event: LoggingEvent) {
-            // Ignore logs from Console class to prevent infinite loops
+            // Ignore logs from Console class to prevent infinite loops.
             if (LVSettings.isConsoleModEnabled && event.loggerName == Console::class.java.name) return
+
+            // Ignore specific log from LazyFont class to prevent infinite loops. Example: org.lazywizard.lazylib.ui.LazyFont  - Character 'ￃ' is not defined in font data
+            if(event.loggerName == LazyFont::class.java.name && event.renderedMessage.contains("is not defined in font data")) return
 
             val level = event.getLevel()
 
@@ -41,7 +45,7 @@ internal class LogMessageAppender : AppenderSkeleton() {
             }
 
             if (LVSettings.addLogsToDisplayMessageLevel != Level.OFF && level.isGreaterOrEqual(LVSettings.addLogsToDisplayMessageLevel)) {
-                // TODO, remove this next GraphicsLib update
+                // TODO: remove this next GraphicsLib update
                 if (event.renderedMessage.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.
                     return
 
