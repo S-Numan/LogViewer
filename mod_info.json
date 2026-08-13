@@ -1,6 +1,6 @@
 {
   "id": "SN_InGameLog",
-  "name": " Log Viewer",
+  "name": "!Log Viewer",
   "author": "S-Numan",
   "utility": true,
   "version": { "major": '1', "minor": '3', "patch": '0' },

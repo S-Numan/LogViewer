@@ -25,13 +25,15 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
         private const val MAX_MESSAGES = 6
         private const val MESSAGE_LIFETIME = 5f
         private const val FADE_START = 4.0f
+        private const val BUFFER_BETWEEN_MESSAGES = 2f
+        private const val OVERFLOW_MESSAGE_BUFFER = 4f
 
         private data class FeedMessage(
             val text: String,
             val color: Color,
             var age: Float = 0f,
             var yOffset: Float = 0f,
-            var drawable: LazyFont.DrawableString? = null
+            var drawable: LazyFont.DrawableString,
         )
 
         private val activeMessages = mutableListOf<FeedMessage>()
@@ -95,15 +97,17 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
             if (overflowCount > 0 && font != null) {
                 val text = "+$overflowCount more"
 
-                if (overflowDrawable == null) {
-                    overflowDrawable = font!!.createText(text, Color(180, 180, 180), 20f)
-                }
-                if(overflowDrawable?.text != text) {
-                    overflowDrawable?.text = text
+                val drawable = overflowDrawable
+                    ?: font!!.createText(text, Color(180, 180, 180), 20f).also {
+                        overflowDrawable = it
+                    }
+
+                if(drawable.text != text) {
+                    drawable.text = text
                 }
 
-                val lineHeight = 26f
-                val y = baseY - lastYOffset - lineHeight
+                val lineHeight = drawable.height
+                val y = baseY - lastYOffset - lineHeight - OVERFLOW_MESSAGE_BUFFER
 
                 /*val oldest = overflowMessages.lastOrNull()?.age ?: 0f
                 val alpha = if (oldest > FADE_START) {
@@ -111,8 +115,8 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
                     (255 * (1f - fadeProgress.coerceIn(0f, 1f))).toInt()
                 } else 255
 
-                overflowDrawable?.baseColor = Color(180, 180, 180, alpha)*/
-                overflowDrawable?.draw(baseX, y)
+                drawable.baseColor = Color(180, 180, 180, alpha)*/
+                drawable.draw(baseX, y)
             }
         }
 
@@ -128,23 +132,22 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
                 return
             }
 
-            //val screenWidth = Global.getSettings().screenWidth
+            val drawable = runCatching {
+                font?.createText(text, color, 24f)
+            }.getOrNull()
 
-            val drawable = try {
-                font?.createText(text, color, 24f)//?.apply {
-                    //maxWidth = screenWidth - LEFT_BUFFER
-                //}
-            } catch(_: Exception) {
+            if (drawable == null) {
+                //Global.getLogger(this.javaClass).error("Failed to create drawable for text: $text") // May create infinite loop
                 cachedMessages.add(text to color)
                 return
             }
 
             val newMsg = FeedMessage(text, color, 0f, 0f, drawable)
 
-            // Push existing messages upward
-            val lineHeight = 26f
+            // Push existing messages by however long the existing message is
+            val lineHeight = drawable.height
             for (msg in activeMessages) {
-                msg.yOffset += lineHeight
+                msg.yOffset += lineHeight + BUFFER_BETWEEN_MESSAGES
             }
 
             activeMessages.add(0, newMsg) // newest at bottom
