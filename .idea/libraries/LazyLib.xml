@@ -4,13 +4,11 @@
       <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
       <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib-Kotlin.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../LazyLib/javadoc.zip!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
       <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib-Kotlin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
     </SOURCES>
   </library>
 </component>

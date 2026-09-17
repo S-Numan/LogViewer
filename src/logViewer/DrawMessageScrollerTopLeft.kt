@@ -124,11 +124,13 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
         /** Call this to add a message */
         fun addMessage(text: String, color: Color, excludeExistingMessages: Boolean = true) {
             // Hack to prevent string from being too large and slowing down the game. Ideally the size of the text rendered on screen would be checked then clipped, but this is just easier.
-            val text = if (text.length > 300) text.substring(0, 300) else text
+            var text = if (text.length > 300) text.substring(0, 300) else text
+            // Remove next lines. Only show a single line of the log.
+            text = text.substringBefore("\n")
 
             // No duplicates
             if (excludeExistingMessages
-                && (activeMessages.any { it.text == text }) || cachedMessages.any { it.first == text } || overflowMessages.any { it.text == text }) {
+                && ((activeMessages.any { it.text == text }) || cachedMessages.any { it.first == text } || overflowMessages.any { it.text == text })) {
                 return
             }
 
@@ -204,7 +206,7 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
 
         cachedMessages.reversed().forEach {
             try {
-                addMessage(it.first, it.second)
+                addMessage(it.first, it.second, excludeExistingMessages = false)
             } catch(_: Exception) { return@forEach }
             cachedMessages.remove(it)
         }

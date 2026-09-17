@@ -33,7 +33,7 @@ internal class LogMessageAppender : AppenderSkeleton() {
                         append("${event.loggerName} - ")
 
                         if (event.throwableInformation?.throwable.toString().isNotEmpty() && event.throwableStrRep != null) {
-                            append(event.throwableStrRep.joinToString("\n"))
+                            append(event.renderedMessage + "\n" + event.throwableStrRep.joinToString("\n"))
                         } else {
                             append(event.renderedMessage)
                         }
