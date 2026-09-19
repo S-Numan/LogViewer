@@ -51,7 +51,7 @@ internal class DrawMessageScrollerTopLeft : EveryFrameScript, BaseEveryFrameComb
                 try {
                     font = LazyFont.loadFont("graphics/fonts/orbitron24aabold.fnt")
                 } catch (e: FontException) {
-                    Global.getLogger(this.javaClass).error("Failed to load font", e)
+                    Global.getLogger(this::class.java).error("Failed to load font", e)
                     return
                 }
             }

@@ -16,6 +16,7 @@ internal object LVMisc {
 
     fun getMessageDisplay(): UIPanelAPI? {
         val screenPanel = getScreenPanel() ?: return null
+        @Suppress("UNCHECKED_CAST")
         return (screenPanel.invoke("getChildrenCopy") as List<UIComponentAPI>).reversed().firstOrNull { it is MessageDisplayAPI } as? UIPanelAPI
     }
 
