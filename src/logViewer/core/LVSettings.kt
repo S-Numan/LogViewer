@@ -24,15 +24,15 @@ object LVSettings {
             LunaSettings.addSettingsListener(LunaSettingsListener())
         else {
             try {
-                val modSettings = Global.getSettings().loadJSON("modSettings.json", getModID())
-                val consoleLevel = modSettings.getString("addLogsToConsoleModConsoleLevel")
-                val displayLevel = modSettings.getString("addLogsToDisplayMessageLevel")
+                val userSettings = Global.getSettings().loadJSON("userSettings.json", getModID())
+                val consoleLevel = userSettings.getString("addLogsToConsoleModConsoleLevel")
+                val displayLevel = userSettings.getString("addLogsToDisplayMessageLevel")
 
                 addLogsToDisplayMessageLevel = getLevel(displayLevel)
                 addLogsToConsoleModConsoleLevel = getLevel(consoleLevel)
-                redirectSTDERRToLogs = modSettings.getBoolean("redirectSTDERRToLogs")
+                redirectSTDERRToLogs = userSettings.getBoolean("redirectSTDERRToLogs")
             } catch (ex: IOException) {
-                Global.getLogger(this.javaClass).fatal("unable to read modSettings.json", ex)
+                Global.getLogger(this.javaClass).fatal("unable to read userSettings.json", ex)
             }
         }
 

@@ -1,4 +1,4 @@
-# If LunaLib is enabled, this file is ignored.
+# If LunaLib is enabled, this file will be ignored and the in game settings will be used instead.
 {
     "addLogsToConsoleModConsoleLevel":"WARN",
     "addLogsToDisplayMessageLevel":"ERROR",
