@@ -1,17 +1,16 @@
-package logViewer.core
+package logViewer
 
 import com.fs.starfarer.api.BaseModPlugin
 import com.fs.starfarer.api.Global
-import logViewer.DrawMessageScrollerTopLeft
-import logViewer.ErrToLog4jStream
-import logViewer.LogMessageAppender
+import com.fs.starfarer.api.ModSpecAPI
+import logViewer.core.LVSettings
 import logViewer.core.LVSettings.redirectSTDERRToLogs
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console
 import java.io.PrintStream
 
-class LogViewerPlugin : BaseModPlugin() {
+class ModPlugin : BaseModPlugin() {
     init {
         val rootLogger = Logger.getRootLogger()
 
@@ -19,9 +18,19 @@ class LogViewerPlugin : BaseModPlugin() {
             val appender = LogMessageAppender().apply { name = "LV_LogMessageAppender" }
             rootLogger.addAppender(appender)
         }
+
+        modSpec = Global.getSettings().modManager.enabledModsCopy.find { it.modPluginClassName == this::class.java.name }!!
     }
 
     companion object {
+        private lateinit var modSpec: ModSpecAPI
+        @JvmStatic
+        fun getModSpec(): ModSpecAPI = modSpec
+        @JvmStatic
+        fun getModName(): String = modSpec.name.trim()
+        @JvmStatic
+        fun getModId(): String = modSpec.id
+
         var applicationLoaded = false
         var reachedMaxCache = false
         const val MAX_CACHE_SIZE = 2000

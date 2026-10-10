@@ -1,7 +1,7 @@
 package logViewer.core
 
 import com.fs.starfarer.api.Global
-import com.fs.starfarer.api.ModSpecAPI
+import logViewer.ModPlugin
 import lunalib.lunaSettings.LunaSettings
 import org.apache.log4j.Level
 import java.io.IOException
@@ -18,13 +18,11 @@ object LVSettings {
     }
 
     fun onApplicationLoad() {
-        modSpec = Global.getSettings().modManager.enabledModsCopy.find { it.modPluginClassName == LogViewerPlugin::class.java.name }!!
-
         if (Global.getSettings().modManager.isModEnabled("lunalib") && !LunaSettings.hasSettingsListenerOfClass(LunaSettingsListener::class.java))
             LunaSettings.addSettingsListener(LunaSettingsListener())
         else {
             try {
-                val userSettings = Global.getSettings().loadJSON("userSettings.json", getModID())
+                val userSettings = Global.getSettings().loadJSON("userSettings.json", ModPlugin.getModId())
                 val consoleLevel = userSettings.getString("addLogsToConsoleModConsoleLevel")
                 val displayLevel = userSettings.getString("addLogsToDisplayMessageLevel")
 
@@ -38,11 +36,6 @@ object LVSettings {
 
         isConsoleModEnabled = Global.getSettings().modManager.isModEnabled("lw_console")
     }
-
-    private lateinit var modSpec: ModSpecAPI
-    fun getModSpec(): ModSpecAPI = modSpec
-    fun getModName(): String = modSpec.name.trim()
-    fun getModID(): String = modSpec.id
 
     var isConsoleModEnabled = false
 
