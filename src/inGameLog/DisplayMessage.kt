@@ -1,11 +1,11 @@
-package logViewer
+package inGameLog
 
 import com.fs.starfarer.api.GameState
 import com.fs.starfarer.api.Global
 import com.fs.starfarer.api.util.Misc
-import logViewer.core.LVMisc.getCallerClass
-import logViewer.core.LVMisc.isConsoleOpen
-import logViewer.core.LVSettings
+import inGameLog.core.LVMisc.getCallerClass
+import inGameLog.core.LVMisc.isConsoleOpen
+import inGameLog.core.LVSettings
 import org.apache.log4j.Level
 import org.lazywizard.console.Console
 import java.awt.Color

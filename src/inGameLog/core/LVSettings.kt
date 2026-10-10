@@ -1,7 +1,7 @@
-package logViewer.core
+package inGameLog.core
 
 import com.fs.starfarer.api.Global
-import logViewer.ModPlugin
+import inGameLog.ModPlugin
 import lunalib.lunaSettings.LunaSettings
 import org.apache.log4j.Level
 import java.io.IOException

@@ -1,4 +1,4 @@
-package logViewer.core.internal
+package inGameLog.core.internal
 
 import org.apache.log4j.Logger
 import java.io.OutputStream

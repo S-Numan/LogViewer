@@ -1,8 +1,8 @@
-package logViewer
+package inGameLog
 
 import com.fs.starfarer.api.util.Misc
-import logViewer.core.LVSettings
-import logViewer.ModPlugin.Companion.MAX_CACHE_SIZE
+import inGameLog.core.LVSettings
+import inGameLog.ModPlugin.Companion.MAX_CACHE_SIZE
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.Level
 import org.apache.log4j.spi.LoggingEvent

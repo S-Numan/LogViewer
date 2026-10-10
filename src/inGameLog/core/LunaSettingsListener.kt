@@ -1,7 +1,7 @@
-package logViewer.core
+package inGameLog.core
 
-import logViewer.ModPlugin
-import logViewer.core.LVSettings.getLevel
+import inGameLog.ModPlugin
+import inGameLog.core.LVSettings.getLevel
 import lunalib.lunaSettings.LunaSettings
 import lunalib.lunaSettings.LunaSettingsListener
 import org.apache.log4j.Level

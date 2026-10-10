@@ -1,7 +1,8 @@
-package logViewer
+package inGameLog
 
 import org.apache.log4j.Logger
 import java.io.OutputStream
+import java.nio.ByteBuffer
 import java.nio.CharBuffer
 import java.nio.charset.Charset
 import java.nio.charset.CharsetDecoder
@@ -50,7 +51,7 @@ class ErrToLog4jStream(
     @Synchronized
     override fun write(b: ByteArray, off: Int, len: Int) {
         if (closed) return
-        val input = java.nio.ByteBuffer.wrap(b, off, len)
+        val input = ByteBuffer.wrap(b, off, len)
         decodeOutBuf.clear()
         while (input.hasRemaining()) {
             val result = decoder.decode(input, decodeOutBuf, false)

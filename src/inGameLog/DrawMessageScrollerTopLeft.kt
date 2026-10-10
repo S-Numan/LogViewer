@@ -1,4 +1,4 @@
-package logViewer
+package inGameLog
 
 import com.fs.starfarer.api.EveryFrameScript
 import com.fs.starfarer.api.GameState
@@ -10,9 +10,9 @@ import com.fs.starfarer.api.combat.ViewportAPI
 import com.fs.starfarer.api.input.InputEventAPI
 import com.fs.starfarer.api.ui.CustomPanelAPI
 import com.fs.starfarer.api.ui.UIComponentAPI
-import logViewer.core.LVMisc.getScreenPanel
-import logViewer.core.ReflectionUtils.invoke
-import logViewer.core.TimeKeeper
+import inGameLog.core.LVMisc.getScreenPanel
+import inGameLog.core.ReflectionUtils.invoke
+import inGameLog.core.TimeKeeper
 import org.lazywizard.lazylib.ui.FontException
 import org.lazywizard.lazylib.ui.LazyFont
 import java.awt.Color

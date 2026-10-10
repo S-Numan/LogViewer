@@ -4,12 +4,12 @@ val starsectorPath= "../../";
 
 //The name of the file that the code is compiled to. This will automatically place in to the /jars folder.
 //Make sure that the "jars" entry in your mod_info.json matches this.
-val jarName = "LogViewer.jar"
+val jarName = "InGameLog.jar"
 
 //Name for the Zip that is created when you run package_mod.bat.
 //This zip includes the data, graphics, jars, sounds and src folder.
 //It also includes the mod_info.json and .version files at the root folder.
-val zipName = "LogViewer.zip"
+val zipName = "InGameLog.zip"
 
 //Other mods to load as compile-time dependencies. Adding them will provide auto-complete for their functions.
 //Each entry is the jar name. The build searches every mod /jars/ folder for a matching file ("LazyLib.jar" -> "Starsector/mods/LazyLib/jars/LazyLib.jar")

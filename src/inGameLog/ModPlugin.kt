@@ -1,10 +1,10 @@
-package logViewer
+package inGameLog
 
 import com.fs.starfarer.api.BaseModPlugin
 import com.fs.starfarer.api.Global
 import com.fs.starfarer.api.ModSpecAPI
-import logViewer.core.LVSettings
-import logViewer.core.LVSettings.redirectSTDERRToLogs
+import inGameLog.core.LVSettings
+import inGameLog.core.LVSettings.redirectSTDERRToLogs
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console

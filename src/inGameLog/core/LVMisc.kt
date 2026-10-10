@@ -1,11 +1,10 @@
-package logViewer.core
+package inGameLog.core
 
 import com.fs.starfarer.api.campaign.MessageDisplayAPI
 import com.fs.starfarer.api.ui.UIComponentAPI
 import com.fs.starfarer.api.ui.UIPanelAPI
 import com.fs.state.AppDriver
-import logViewer.core.ReflectionUtils.getMethodsMatching
-import logViewer.core.ReflectionUtils.invoke
+import inGameLog.core.ReflectionUtils.invoke
 import org.lazywizard.console.overlay.v2.panels.ConsoleOverlayPanel
 
 internal object LVMisc {

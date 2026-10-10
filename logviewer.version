@@ -1,7 +1,7 @@
 {
   "masterVersionFile": "https://raw.githubusercontent.com/S-Numan/LogViewer/master/logviewer.version",
 
-  "modName": "LogViewer",
+  "modName": "InGameLog",
   "modVersion":
     {
       "major": 1,
