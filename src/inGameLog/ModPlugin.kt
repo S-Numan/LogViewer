@@ -12,18 +12,6 @@ import org.lazywizard.console.Console
 import java.io.PrintStream
 
 class ModPlugin : BaseModPlugin() {
-    init {
-        val rootLogger = Logger.getRootLogger()
-
-        if (rootLogger.getAppender("LV_LogMessageAppender") == null) {
-            val appender = LogMessageAppender().apply { name = "LV_LogMessageAppender" }
-            rootLogger.addAppender(appender)
-        }
-
-        modSpec = Global.getSettings().modManager.enabledModsCopy.find { it.modPluginClassName == this::class.java.name }!!
-    }
-
-
     companion object {
         private lateinit var modSpec: ModSpecAPI
         @JvmStatic
@@ -35,11 +23,13 @@ class ModPlugin : BaseModPlugin() {
     }
 
     override fun onApplicationLoad() {
+        modSpec = Global.getSettings().modManager.enabledModsCopy.find { it.modPluginClassName == this::class.java.name }!!
+
         DrawMessageScrollerTopLeft.doInit()
 
         LVSettings.onApplicationLoad()
 
-        if(redirectSTDERRToLogs) {
+        if (redirectSTDERRToLogs) {
             if (System.err !is PrintStream || System.err.toString().contains("ErrToLog4j").not()) {
                 System.setErr(PrintStream(ErrToLog4jStream(), true))
             }
@@ -58,8 +48,9 @@ class ModPlugin : BaseModPlugin() {
 
         val eventsToReplay: List<LoggingEvent> = try {
             val logStream = Global.getSettings().openStream("starsector.log")
-            val logContent = ParseLog.tailFromLastMarkerText(logStream, "0    [")
-            ParseLog.parseLogContent(logContent)
+            val logContent = ParseLog.tailFromLastMarker(logStream, "0    [")
+            val lowestLevel = minOf(LVSettings.addLogsToConsoleModConsoleLevel, LVSettings.addLogsToDisplayMessageLevel, compareBy { it.toInt() })
+            ParseLog.parseLogContent(logContent, lowestLevel)
         } catch (e: Exception) {
             Global.getLogger(this.javaClass).error("Failed to read log file", e)
             emptyList()
@@ -68,8 +59,14 @@ class ModPlugin : BaseModPlugin() {
         eventsToReplay.forEach {
             LogMessageAppender.displayLoggedMessage(it)
         }
-    }
 
+        val rootLogger = Logger.getRootLogger()
+
+        if (rootLogger.getAppender("LV_LogMessageAppender") == null) {
+            val appender = LogMessageAppender().apply { name = "LV_LogMessageAppender" }
+            rootLogger.addAppender(appender)
+        }
+    }
 
     override fun onGameLoad(newGame: Boolean) {
         val sector = Global.getSector()
