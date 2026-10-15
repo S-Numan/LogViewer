@@ -4,44 +4,63 @@ import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import java.io.InputStream
+import java.util.ArrayDeque
 
 internal object ParseLog {
     // e.g. "2841 [Thread-4] ERROR org.magiclib.Foo  - message..."
     private val logHeader = Regex("""^(\d+)\s+\[([^\]]*)]\s+(\w+)\s+(\S+)\s+-\s?(.*)$""")
 
+    /** Upper bound on replayed events; the oldest are dropped first. */
+    const val DEFAULT_MAX_EVENTS = 25000
+
+    /** How far in ms can the elapsed time fall below the highest value seen so far before we treat it as a new session. */
+    const val DEFAULT_SESSION_RESET_DROP_MS = 2000L
+
     private class RawEntry(
-        //val thread: String,
         val level: Level,
         val logger: String,
         val message: StringBuilder,
     )
 
-    fun parseLogContent(logContent: String, onlyEqualOrGreaterTo: Level = Level.ALL): List<LoggingEvent> {
-        if (logContent.isEmpty()) return emptyList()
+    fun parse(
+        input: InputStream,
+        minLevel: Level = Level.ALL,
+        maxEvents: Int = DEFAULT_MAX_EVENTS,
+        sessionResetDropMs: Long = DEFAULT_SESSION_RESET_DROP_MS,
+        charset: java.nio.charset.Charset = Charsets.UTF_8,
+    ): List<LoggingEvent> {
+        val entries = ArrayDeque<RawEntry>()
+        var maxElapsed = -1L
+        var current: RawEntry? = null   // null while inside a filtered-out entry
 
-        val entries = mutableListOf<RawEntry>()
+        input.bufferedReader(charset).use { reader ->
+            reader.forEachLine { line ->
+                val match = logHeader.matchEntire(line)
+                if (match != null) {
+                    val elapsed = match.groupValues[1].toLongOrNull() ?: 0L
+                    if (elapsed < maxElapsed - sessionResetDropMs) {
+                        entries.clear()          // new session started
+                        maxElapsed = elapsed
+                    } else if (elapsed > maxElapsed) {
+                        maxElapsed = elapsed
+                    }
 
-        for (line in logContent.lines()) {
-            val match = logHeader.matchEntire(line)
-            if (match != null) {
-                val (_, thread, levelName, logger, message) = match.destructured
-                entries += RawEntry(
-                    //thread = thread,
-                    level = Level.toLevel(levelName, Level.INFO),
-                    logger = logger,
-                    message = StringBuilder(message),
-                )
-            } else if (entries.isNotEmpty()) {
-                // Continuation line of the previous entry
-                entries.last().message.append('\n').append(line)
+                    val level = Level.toLevel(match.groupValues[3], Level.INFO)
+                    current = if (level.isGreaterOrEqual(minLevel)) {
+                        RawEntry(level, match.groupValues[4], StringBuilder(match.groupValues[5])).also {
+                            entries.addLast(it)
+                            if (entries.size > maxEvents) entries.pollFirst()
+                        }
+                    } else null
+                } else {
+                    // Continuation line (stack trace, multi-line message) of the previous entry.
+                    // Lines before the first header, or under a filtered-out entry, are ignored.
+                    current?.message?.append('\n')?.append(line)
+                }
             }
-            // Lines before the first header (if any) are ignored
         }
 
-        return entries.mapNotNull {
-            if(!it.level.isGreaterOrEqual(onlyEqualOrGreaterTo))
-                return@mapNotNull null
-
+        return entries.map {
             LoggingEvent(
                 "",
                 Logger.getLogger(it.logger),
@@ -50,45 +69,5 @@ internal object ParseLog {
                 null
             )
         }
-    }
-
-    /**
-     * Returns the content from the LAST occurrence of [marker] to the end of the stream (marker included).
-     *
-     * If the marker never appears, returns the entire stream.
-     */
-    fun tailFromLastMarker(input: InputStream, marker: String): String {
-        val innerMarker = marker.toByteArray(Charsets.UTF_8)
-        val m = innerMarker.size
-
-        var data = ByteArray(8192)   // Bytes since the last marker (or everything so far)
-        var size = 0
-        val buf = ByteArray(8192)
-
-        input.use { input ->
-            while (true) {
-                val n = input.read(buf)
-                if (n < 0) break
-
-                for (i in 0 until n) {
-                    if (size == data.size) data = data.copyOf(data.size * 2)
-                    data[size++] = buf[i]
-
-                    if (size >= m) {
-                        var match = true
-                        for (j in 0 until m) {
-                            if (data[size - m + j] != innerMarker[j]) { match = false; break }
-                        }
-                        if (match) {
-                            // Discard everything before the marker
-                            for (j in 0 until m) data[j] = innerMarker[j]
-                            size = m
-                        }
-                    }
-                }
-            }
-        }
-
-        return String(data, 0, size, Charsets.UTF_8)
     }
 }
