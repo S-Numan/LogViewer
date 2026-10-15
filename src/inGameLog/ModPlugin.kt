@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global
 import com.fs.starfarer.api.ModSpecAPI
 import inGameLog.core.LVSettings
 import inGameLog.core.LVSettings.redirectSTDERRToLogs
+import inGameLog.core.ParseLog
 import org.apache.log4j.Logger
 import org.apache.log4j.spi.LoggingEvent
 import org.lazywizard.console.Console
@@ -22,6 +23,7 @@ class ModPlugin : BaseModPlugin() {
         modSpec = Global.getSettings().modManager.enabledModsCopy.find { it.modPluginClassName == this::class.java.name }!!
     }
 
+
     companion object {
         private lateinit var modSpec: ModSpecAPI
         @JvmStatic
@@ -30,11 +32,6 @@ class ModPlugin : BaseModPlugin() {
         fun getModName(): String = modSpec.name.trim()
         @JvmStatic
         fun getModId(): String = modSpec.id
-
-        var applicationLoaded = false
-        var reachedMaxCache = false
-        const val MAX_CACHE_SIZE = 2000
-        val cachedEvents = ArrayDeque<LoggingEvent>()
     }
 
     override fun onApplicationLoad() {
@@ -59,19 +56,17 @@ class ModPlugin : BaseModPlugin() {
             throw RuntimeException(e)
         }
 
-        val eventsToReplay: List<LoggingEvent>
-
-        synchronized(cachedEvents) {
-            applicationLoaded = true
-            eventsToReplay = cachedEvents.toList()
-            cachedEvents.clear()
+        val eventsToReplay: List<LoggingEvent> = try {
+            val logStream = Global.getSettings().openStream("starsector.log")
+            val logContent = ParseLog.tailFromLastMarkerText(logStream, "0    [")
+            ParseLog.parseLogContent(logContent)
+        } catch (e: Exception) {
+            Global.getLogger(this.javaClass).error("Failed to read log file", e)
+            emptyList()
         }
 
         eventsToReplay.forEach {
             LogMessageAppender.displayLoggedMessage(it)
-        }
-        if(reachedMaxCache) {
-            Global.getLogger(this.javaClass).warn("LogViewer: Reached max cache size of $MAX_CACHE_SIZE events. Some logs have been dropped.")
         }
     }
 

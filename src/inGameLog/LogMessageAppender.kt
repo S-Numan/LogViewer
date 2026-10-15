@@ -2,7 +2,6 @@ package inGameLog
 
 import com.fs.starfarer.api.util.Misc
 import inGameLog.core.LVSettings
-import inGameLog.ModPlugin.Companion.MAX_CACHE_SIZE
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.Level
 import org.apache.log4j.spi.LoggingEvent
@@ -56,22 +55,6 @@ internal class LogMessageAppender : AppenderSkeleton() {
     }
 
     override fun append(event: LoggingEvent) {
-        if (!ModPlugin.applicationLoaded) {
-            val level = event.getLevel()
-            if(!level.isGreaterOrEqual(Level.WARN)) // Skip caching that which is below WARN.
-                return
-
-            synchronized(ModPlugin.cachedEvents) {
-                val cache = ModPlugin.cachedEvents
-                if (cache.size >= MAX_CACHE_SIZE) {
-                    cache.removeFirst()
-                    ModPlugin.reachedMaxCache = true
-                }
-                cache.addLast(event)
-            }
-            return
-        }
-
         if (LVSettings.addLogsToConsoleModConsoleLevel == Level.OFF && LVSettings.addLogsToDisplayMessageLevel == Level.OFF)
             return
 
