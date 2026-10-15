@@ -48,7 +48,7 @@ class ModPlugin : BaseModPlugin() {
 
         val eventsToReplay: List<LoggingEvent> = try {
             val lowestLevel = minOf(LVSettings.addLogsToConsoleModConsoleLevel, LVSettings.addLogsToDisplayMessageLevel, compareBy { it.toInt() })
-            Global.getSettings().openStream("starsector.log").use { ParseLog.parse(it, lowestLevel) }
+            ParseLog.parseSession({ Global.getSettings().openStream(it) }, lowestLevel)
         } catch (e: Exception) {
             Global.getLogger(this.javaClass).warn("Could not read starsector.log: ${e.message}")
             emptyList()
