@@ -5,13 +5,13 @@
   "modVersion":
     {
       "major": 1,
-      "minor": 3,
+      "minor": 4,
       "patch": "0" # Can be a number, character or string (1, 2, a, b, "-RC2", etc)
     },
 
   "modThreadId": 35325,
 
-  "directDownloadURL": "https://github.com/S-Numan/LogViewer/releases/latest/download/LogViewer.zip",
+  "directDownloadURL": "https://github.com/S-Numan/LogViewer/releases/latest/download/InGameLog.zip",
 
   "changelogURL": "https://raw.githubusercontent.com/S-Numan/LogViewer/master/CHANGELOGS.md",
 }
