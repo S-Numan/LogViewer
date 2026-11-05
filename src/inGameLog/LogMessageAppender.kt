@@ -41,10 +41,6 @@ internal class LogMessageAppender : AppenderSkeleton() {
             if (LVSettings.addLogsToDisplayMessageLevel != Level.OFF && level.isGreaterOrEqual(LVSettings.addLogsToDisplayMessageLevel)) {
                 val message = event.renderedMessage.ifEmpty { event.throwableStrRep?.first() } ?: "Log message was null"
 
-                // TODO: remove this next GraphicsLib update
-                if (message.contains("enableFullExplosionEffects")) // Hack to rid of never to be fixed before next starsector update graphics lib issue.
-                    return
-
                 when (level) {
                     Level.WARN -> DisplayMessage.showMessageCustom(message, Color.yellow)
                     Level.ERROR, Level.FATAL -> DisplayMessage.showMessageCustom(message, Color.red)
