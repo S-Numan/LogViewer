@@ -1,0 +1,34 @@
+package inGameLog.core
+
+import inGameLog.ModPlugin
+import inGameLog.core.LVSettings.getLevel
+import lunalib.lunaSettings.LunaSettings
+import lunalib.lunaSettings.LunaSettingsListener
+import org.apache.log4j.Level
+
+internal class LunaSettingsListener : LunaSettingsListener {
+    init {
+        settingsChanged(ModPlugin.getModId())
+    }
+
+    //Gets called whenever settings are saved in the campaign or the main menu.
+    override fun settingsChanged(modID: String) {
+        if (modID != ModPlugin.getModId())
+            return
+
+        val disable = LunaSettings.getBoolean(modID, "disable")!!
+
+        if (!disable) {
+            val displayLevel = LunaSettings.getString(modID, "addLogsToDisplayMessageLevel")!!
+            val consoleLevel = LunaSettings.getString(modID, "addLogsToConsoleModConsoleLevel")!!
+
+            LVSettings.addLogsToDisplayMessageLevel = getLevel(displayLevel)
+            LVSettings.addLogsToConsoleModConsoleLevel = getLevel(consoleLevel)
+            LVSettings.redirectSTDERRToLogs = LunaSettings.getBoolean(modID, "redirectSTDERRToLogs")!!
+        } else {
+            LVSettings.addLogsToConsoleModConsoleLevel = Level.OFF
+            LVSettings.addLogsToDisplayMessageLevel = Level.OFF
+            LVSettings.redirectSTDERRToLogs = false
+        }
+    }
+}

@@ -1,5 +1,5 @@
 {
   "plugins": {
-    "DrawMessageScrollerTopLeft": "logViewer.DrawMessageScrollerTopLeft",
+    "DrawMessageScrollerTopLeft": "inGameLog.DrawMessageScrollerTopLeft",
   },
 }

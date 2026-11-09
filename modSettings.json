@@ -1,8 +1,0 @@
-# If LunaLib is enabled, this file is ignored.
-{
-    "addLogsToConsoleModConsoleLevel":"WARN",
-    "addLogsToDisplayMessageLevel":"ERROR",
-
-    "addSTDERRToLogs":false
-
-}
