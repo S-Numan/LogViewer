@@ -1,3 +1,9 @@
+## 1.4.0
+- Improve STDERR feature
+- Migrate settings userSettings.json
+- Now parses all logs even before onApplicationLoad
+- Minor improvements to how messages render on screen.
+
 ## 1.3.0
 - Add functionality to send STDERR to logs as well.
 - Minor bug fixes
