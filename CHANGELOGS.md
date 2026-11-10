@@ -1,6 +1,6 @@
 ## 1.4.0
 - Improve STDERR feature
-- Migrate settings to MagicUserSettings
+- Migrate settings userSettings.json
 - Now parses all logs even before onApplicationLoad
 - Minor improvements to how messages render on screen.
 
