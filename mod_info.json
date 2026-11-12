@@ -5,7 +5,7 @@
   "utility": true,
   "version": { "major": '1', "minor": '4', "patch": '0' },
   "description": "View logs in game.",
-  "gameVersion": "0.98a-RC8",
+  "gameVersion": "0.98.5a-RC4",
   "jars": [ "jars/InGameLog.jar" ],
   "modPlugin": "inGameLog.ModPlugin",
   "dependencies": [
